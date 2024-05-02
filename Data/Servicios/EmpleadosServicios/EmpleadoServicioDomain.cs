@@ -58,9 +58,9 @@ namespace Domain.Servicios.EmpleadosServicios
             return res;
         }
 
-        public async Task<Empleado> EmpleadoPorCodigo(int codigoEmpleado)
+        public async Task<Empleado> EmpleadoPorCodigo(string codigoOrNombreEmpleado)
         {
-            var res = await _rep.EmpleadoPorCodigo(codigoEmpleado);
+            var res = await _rep.EmpleadoPorCodigo(codigoOrNombreEmpleado);
             return res;
         }
 

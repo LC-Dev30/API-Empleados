@@ -1,5 +1,6 @@
 ﻿using Aplicacion.Servicios;
 using Domain.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace Arquitectura.Controllers
 {
     [Route("api/")]
     [ApiController]
+    [Authorize]
     public class Empleado : ControllerBase
     {
         private readonly IServiceEmpleadoAplicacion _servicioEmpleados;
@@ -18,7 +20,7 @@ namespace Arquitectura.Controllers
 
         [HttpGet("empleados")]
         public async Task<IActionResult> ListaEmpleados()
-            {
+        {
             var data = await _servicioEmpleados.GetEmpleadosServicios();
             return Ok(data);
         }
@@ -44,10 +46,10 @@ namespace Arquitectura.Controllers
             return Ok(res);
         }
 
-        [HttpGet("empleado/{codigoEmpleado}")]
-        public async Task<IActionResult> EmpleadoPorCodigo(int codigoEmpleado)
+        [HttpGet("empleado/{codigoOrNombreEmpleado}")]
+        public async Task<IActionResult> EmpleadoPorCodigo(string codigoOrNombreEmpleado)
         {
-            var data = await _servicioEmpleados.EmpleadoPorCodigoServicio(codigoEmpleado);
+            var data = await _servicioEmpleados.EmpleadoPorCodigoServicio(codigoOrNombreEmpleado);
             return Ok(data);
         }
     }

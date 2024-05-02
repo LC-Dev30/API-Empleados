@@ -6,6 +6,7 @@ using Domain.Entidades.Lockers.Interfaces;
 using Domain.Servicios.EmpleadosServicios;
 using Domain.Servicios.LockersServicios;
 using Infraestructura.Persistencia.Repositorios;
+using Infraestructura.Servicios.Login;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -13,7 +14,7 @@ using System.Text;
 
 namespace Infraestructura.ConfiguracionApp
 {
-    public class AppConfig
+    public class AppConfigServicios
     {
         public void ConfigurarServiciosContainer(IServiceCollection services, IConfiguration config)
         {
@@ -28,6 +29,7 @@ namespace Infraestructura.ConfiguracionApp
             //Infraestructura
             services.AddScoped<IRepositorioEmpleadoDomain, EmpleadoRepositorio>();
             services.AddScoped<IRepositorioLockerDomain, LockerRepositorio>();
+            services.AddScoped<ILoginServicio, LoginServicio>();
 
             //configuracion JWT
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(option =>

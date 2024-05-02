@@ -1,4 +1,6 @@
-﻿using Infraestructura.ConfiguracionApp;
+﻿using Domain.Entidades.Admin;
+using Infraestructura.ConfiguracionApp;
+using Infraestructura.Servicios.Login;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,21 +12,32 @@ namespace Infraestructura.Controllers
     public class Login : ControllerBase
     {
         IConfiguration _configuration;
+        ILoginServicio _loginServicio;
 
-        public Login(IConfiguration configuration)
+        public Login(IConfiguration configuration, ILoginServicio loginServicio)
         {
            _configuration = configuration;
+           _loginServicio = loginServicio;
         }
 
         [HttpPost("login")]
-        public IActionResult LoginService(Admin admin)
+        public async Task<IActionResult> LoginService(Admin admin)
         {
-            if (admin == null)
-                return BadRequest("Campos vacios o nulos");
+            var resServicio = await _loginServicio.LoginService(admin);
 
-            var loginService = new AutenticacionService(_configuration);
-            var token = loginService.CrearToken(admin);
+            if (resServicio.StatusCode != 200 || resServicio.Data == null)
+                return Problem(statusCode:resServicio.StatusCode, detail:resServicio.Message);
+
+            var adminPalse = (Admin)resServicio.Data;
+            var token = AutenticacionService.CrearToken(adminPalse,_configuration);
             return Ok(token);
+        }
+
+        [HttpGet("prueba")]
+        [Authorize]
+        public  IActionResult Prueba()
+        {     
+            return Ok("Lista de pruebas");
         }
     }
 }

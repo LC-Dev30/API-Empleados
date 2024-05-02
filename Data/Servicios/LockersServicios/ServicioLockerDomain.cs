@@ -30,7 +30,7 @@ namespace Domain.Servicios.LockersServicios
                 await _repositorioLocker.AgregarLockers(locker);
             }
 
-            throw new Exception("");
+            return new ResponseDomainDTO { StatusCode = 200, Message = "Lockers agregados" };
         }
 
 

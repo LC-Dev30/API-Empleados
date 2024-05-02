@@ -27,7 +27,7 @@ namespace Arquitectura.Persistencia.Repositorios
                     cmd.CommandText = "INSERT INTO Empleado VALUES(@CodigoEmpleado,@Nombre,@LockerAsignado,@IdAdmin,@FechaCreacion)";
 
                     cmd.Parameters.AddWithValue("@CodigoEmpleado", empleado.CodigoEmpleado);
-                    cmd.Parameters.AddWithValue("@Nombre", empleado.Nombre);
+                    cmd.Parameters.AddWithValue("@Nombre", empleado.Nombre.ToUpper());
                     cmd.Parameters.AddWithValue("@LockerAsignado", empleado.LockerAsignado);
                     cmd.Parameters.AddWithValue("@IdAdmin", empleado.IdAdmin);
                     cmd.Parameters.AddWithValue("@FechaCreacion", empleado.FechaCreacion);
@@ -107,7 +107,7 @@ namespace Arquitectura.Persistencia.Repositorios
             }
         }
 
-        public async Task<Empleado> EmpleadoPorCodigo(int CodigoEmpleado)
+        public async Task<Empleado> EmpleadoPorCodigo(string codigoOrNombreEmpleado)
         {
             try
             {
@@ -115,23 +115,35 @@ namespace Arquitectura.Persistencia.Repositorios
                 {
                     await _connection.OpenAsync();
                     var cmd = _connection.CreateCommand();
-                    cmd.CommandText = "SELECT TOP 1 Nombre,FechaCreacion,LockerAsignado,CodigoEmpleado FROM Empleado WHERE CodigoEmpleado = @codigoEmpleado";
 
-                    cmd.Parameters.AddWithValue("@codigoEmpleado", CodigoEmpleado);
+                    var query = "SELECT TOP 1 Nombre,FechaCreacion,LockerAsignado,CodigoEmpleado FROM Empleado WHERE CodigoEmpleado = @codigoEmpleado";
+
+                    if(codigoOrNombreEmpleado.Length > 4)
+                    {
+                        query = "SELECT TOP 1 Nombre,FechaCreacion,LockerAsignado,CodigoEmpleado FROM Empleado WHERE Nombre = @Nombre";
+                        cmd.Parameters.AddWithValue("@Nombre", codigoOrNombreEmpleado);
+                    }
+
+                    if(codigoOrNombreEmpleado.Length == 4)
+                      cmd.Parameters.AddWithValue("@codigoEmpleado", codigoOrNombreEmpleado);
+         
+                    cmd.CommandText = query;
 
                     var reader = await cmd.ExecuteReaderAsync();
 
                     Empleado empleado = new Empleado();
 
-                    while (await reader.ReadAsync())
+                    if (await reader.ReadAsync())
                     {
                         empleado.Nombre = reader.GetString(0);
                         empleado.FechaCreacion = reader.GetDateTime(1);
                         empleado.LockerAsignado = reader.GetInt32(2);
                         empleado.CodigoEmpleado = reader.GetString(3);
+                        return empleado;
                     }
+
                     await _connection.CloseAsync();
-                    return empleado;
+                    return null;
                 }
             }
             catch (Exception)

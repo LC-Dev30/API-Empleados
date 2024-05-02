@@ -14,6 +14,6 @@ namespace Aplicacion.Servicios
         Task<ResponseDomainDTO> AgregaEmpleadoServicio(EmpleadoDTO empleado);
         Task<ResponseDomainDTO> EditarEmpleadoServicio(EmpleadoDTO empleado);
         Task<ResponseDomainDTO> EliminarEmpleadServicio(int codigoEmpleado,int lockerAsignado);
-        Task<Empleado> EmpleadoPorCodigoServicio(int codigoEmpleado);
+        Task<Empleado> EmpleadoPorCodigoServicio(string codigoOrNombreEmpleado);
     }
 }

@@ -10,6 +10,6 @@ namespace Domain.Entidades.Empleados.Interfaces
         Task<ResponseDomainDTO> AgregarEmpleado(Empleado empleado);
         Task<ResponseDomainDTO> EditarEmpleado(EmpleadoDTO empleado);
         Task<ResponseDomainDTO> EliminarEmpleado(int CodigoEmpleado);
-        Task<Empleado> EmpleadoPorCodigo(int CodigoEmpleado);
+        Task<Empleado> EmpleadoPorCodigo(string codigoOrNombreEmpleado);
     }
 }

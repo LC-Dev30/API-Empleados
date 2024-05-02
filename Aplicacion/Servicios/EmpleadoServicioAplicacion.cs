@@ -36,9 +36,9 @@ namespace Aplicacion.Servicios
             return res;
         }
 
-        public async Task<Empleado> EmpleadoPorCodigoServicio(int codigoEmpleado)
+        public async Task<Empleado> EmpleadoPorCodigoServicio(string codigoOrNombreEmpleado)
         {
-          var res = await _servicioDomain.EmpleadoPorCodigo(codigoEmpleado);
+          var res = await _servicioDomain.EmpleadoPorCodigo(codigoOrNombreEmpleado);
           return res;
         }
 

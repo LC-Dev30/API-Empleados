@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Domain.Entidades.Admin;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,17 +9,10 @@ namespace Infraestructura.ConfiguracionApp
 {
     public class AutenticacionService
     {
-        IConfiguration _configuration;
-
-        public AutenticacionService(IConfiguration configuration)
+        public static string CrearToken(Admin user, IConfiguration configuration)
         {
-                _configuration = configuration;
-        }
-
-        public dynamic CrearToken(Admin user)
-        {
-            var jwt = _configuration.GetSection("Jwt").Get<JwtConfig>();
-
+            var jwt = configuration.GetSection("Jwt").Get<JwtConfig>();
+            
             IEnumerable<Claim> claims = new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub,jwt.Subject),
@@ -35,15 +29,12 @@ namespace Infraestructura.ConfiguracionApp
                   jwt.Issuer,
                   jwt.Audience,
                   claims,
-                  expires: DateTime.Now.AddMinutes(60),
+                  expires: DateTime.Now.AddMinutes(5),
                   signingCredentials: singIn
                 );
 
             var result = new JwtSecurityTokenHandler().WriteToken(token);
-
             return result;
         }
     }
-
-  
 }
