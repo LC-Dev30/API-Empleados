@@ -32,12 +32,5 @@ namespace Infraestructura.Controllers
             var token = AutenticacionService.CrearToken(adminPalse,_configuration);
             return Ok(token);
         }
-
-        [HttpGet("prueba")]
-        [Authorize]
-        public  IActionResult Prueba()
-        {     
-            return Ok("Lista de pruebas");
-        }
     }
 }
